@@ -16,3 +16,4 @@ I have modified the gsap club plugins with the trial plugins, but with the trial
 This project is open source and available under the [MIT License](LICENSE).
 
 fix
+fix
