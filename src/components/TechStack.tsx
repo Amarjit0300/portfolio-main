@@ -130,13 +130,13 @@ const TechStack = () => {
 
   useEffect(() => {
     const handleScroll = () => {
+      const workEl = document.getElementById("work");
+      if (!workEl) return;
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const threshold = document
-        .getElementById("work")!
-        .getBoundingClientRect().top;
+      const threshold = workEl.getBoundingClientRect().top;
       setIsActive(scrollY > threshold);
     };
-    document.querySelectorAll(".header a").forEach((elem) => {
+    document.querySelectorAll(".header a[data-href]").forEach((elem) => {
       const element = elem as HTMLAnchorElement;
       element.addEventListener("click", () => {
         const interval = setInterval(() => {

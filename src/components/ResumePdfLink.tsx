@@ -3,9 +3,13 @@ import { withBase } from "../utils/withBase";
 
 const RESUME_PDF = "/Resume_Amarjit_Singh.pdf";
 
-type Props = Omit<ComponentProps<"a">, "href" | "target" | "rel" | "onClick">;
+type Props = Omit<ComponentProps<"a">, "href" | "target" | "rel">;
 
-/** Opens the resume PDF in a new tab; avoids default navigation being blocked by scroll handlers. */
+/**
+ * Plain link to the PDF in `public/`. We intentionally do not use window.open():
+ * Safari and other browsers often block that after preventDefault(), which feels
+ * like a broken resume button.
+ */
 export function ResumePdfLink({ children, ...rest }: Props) {
   const href = withBase(RESUME_PDF);
   return (
@@ -14,10 +18,7 @@ export function ResumePdfLink({ children, ...rest }: Props) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={(e) => {
-        e.preventDefault();
-        window.open(href, "_blank", "noopener,noreferrer");
-      }}
+      aria-label="Open resume PDF"
     >
       {children}
     </a>
