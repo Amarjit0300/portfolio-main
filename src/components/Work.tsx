@@ -2,25 +2,38 @@ import { useState, useCallback } from "react";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import { withBase } from "../utils/withBase";
 
 const projects = [
   {
     title: "Diabetes Prediction Model",
     category: "Machine Learning",
     tools: "Python, Pandas, NumPy, Scikit-learn",
-    images: ["/images/diabetes_prediction.png", "/images/diabetes_2.png", "/images/diabetes_3.png"],
+    images: [
+      withBase("/images/diabetes_prediction.png"),
+      withBase("/images/diabetes_2.png"),
+      withBase("/images/diabetes_3.png"),
+    ],
   },
   {
     title: "Sonalika Task Manager",
     category: "Full-stack Enterprise Tool",
     tools: "React, Node.js, PostgreSQL, Analytics",
-    images: ["/images/task_dashboard.png", "/images/tasks.png", "/images/task_login.png"],
+    images: [
+      withBase("/images/task_dashboard.png"),
+      withBase("/images/tasks.png"),
+      withBase("/images/task_login.png"),
+    ],
   },
   {
     title: "Re Colorizer",
     category: "AI Image Colorization",
     tools: "Python, TensorFlow, React, FastAPI",
-    images: ["/images/recolorizer.png", "/images/recolorizer_login.png", "/images/recolorizer_landing.png"],
+    images: [
+      withBase("/images/recolorizer.png"),
+      withBase("/images/recolorizer_login.png"),
+      withBase("/images/recolorizer_landing.png"),
+    ],
   },
 ];
 

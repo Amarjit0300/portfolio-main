@@ -4,6 +4,7 @@ import HoverLinks from "./HoverLinks";
 import { gsap } from "gsap";
 import { ScrollSmoother } from "gsap-trial/ScrollSmoother";
 import "./styles/Navbar.css";
+import { withBase } from "../utils/withBase";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 // eslint-disable-next-line react-refresh/only-export-components
@@ -43,8 +44,8 @@ const Navbar = () => {
   return (
     <>
       <div className="header">
-        <a href="/#" className="navbar-title" data-cursor="disable" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img src="/images/character.JPG" alt="Profile" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+        <a href={import.meta.env.BASE_URL} className="navbar-title" data-cursor="disable" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src={withBase("/images/character.JPG")} alt="Profile" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
           AS
         </a>
         <a
@@ -71,7 +72,7 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href="/Resume_Amarjit_Singh.pdf" target="_blank" rel="noopener noreferrer">
+            <a href={withBase("/Resume_Amarjit_Singh.pdf")} target="_blank" rel="noopener noreferrer">
               <HoverLinks text="RESUME" />
             </a>
           </li>

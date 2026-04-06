@@ -3,6 +3,7 @@ import { useLoading } from "../../context/LoadingProvider";
 import { setProgress } from "../Loading";
 import { setImageCharTimeline, setAllTimeline } from "../utils/GsapScroll";
 import "./styles/Character.css";
+import { withBase } from "../../utils/withBase";
 
 const ImageScene = () => {
   const { setLoading } = useLoading();
@@ -22,7 +23,7 @@ const ImageScene = () => {
     <div className="character-container">
       <div className="character-image-wrapper character-loaded">
         <div className="character-rim"></div>
-        <img src="/images/character.JPG" alt="Profile" className="character-img" />
+        <img src={withBase("/images/character.JPG")} alt="Profile" className="character-img" />
       </div>
     </div>
   );

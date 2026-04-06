@@ -10,17 +10,18 @@ import {
   CylinderCollider,
   RapierRigidBody,
 } from "@react-three/rapier";
+import { withBase } from "../utils/withBase";
 
 const textureLoader = new THREE.TextureLoader();
 const imageUrls = [
-  "/images/python.webp",
-  "/images/sql.webp",
-  "/images/pandas.webp",
-  "/images/numpy.webp",
-  "/images/postgresql.webp",
-  "/images/mysql.webp",
-  "/images/dataviz.webp",
-  "/images/eda.webp",
+  withBase("/images/python.webp"),
+  withBase("/images/sql.webp"),
+  withBase("/images/pandas.webp"),
+  withBase("/images/numpy.webp"),
+  withBase("/images/postgresql.webp"),
+  withBase("/images/mysql.webp"),
+  withBase("/images/dataviz.webp"),
+  withBase("/images/eda.webp"),
 ];
 const textures = imageUrls.map((url) => textureLoader.load(url));
 
@@ -199,7 +200,7 @@ const TechStack = () => {
           ))}
         </Physics>
         <Environment
-          files="/models/char_enviorment.hdr"
+          files={withBase("/models/char_enviorment.hdr")}
           environmentIntensity={0.5}
           environmentRotation={[0, 4, 2]}
         />
