@@ -1,39 +1,53 @@
-# Pushes the production build to branch "gh-pages" (only the contents of dist/).
+# Copies the Vite production build into docs/ and pushes to main.
+# GitHub Pages must use: Branch "main", folder "/docs" (NOT "/" — that serves dev index.html).
 #
-# One-time setup in the GitHub repo:
-#   Settings → Pages → Build and deployment → Source:
-#   "Deploy from a branch" → Branch: gh-pages → Folder: / (root)
-#
-# If you use "main" and "/" instead, GitHub serves the repo root index.html
-# (with /src/main.tsx) and the portfolio will not run.
+# Pushes that only change docs/ are ignored (paths-ignore) so the bot push does not loop.
 
-name: Deploy to GitHub Pages
+name: Deploy site to docs
 
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "docs/**"
 
 permissions:
   contents: write
 
 concurrency:
-  group: pages
+  group: pages-docs
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
+
       - run: npm ci
       - run: npm run build
-      - name: Publish site to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+
+      - name: Sync dist → docs
+        run: |
+          rm -rf docs
+          mkdir -p docs
+          cp -r dist/. docs/
+
+      - name: Commit and push docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --staged --quiet; then
+            echo "No changes under docs/"
+            exit 0
+          fi
+          git commit -m "chore(pages): sync Vite build to docs/"
+          git push
