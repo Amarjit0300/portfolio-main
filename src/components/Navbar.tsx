@@ -22,11 +22,11 @@ const Navbar = () => {
       links.forEach((elem) => {
         const element = elem as HTMLAnchorElement;
         element.addEventListener("click", (e) => {
-          if (window.innerWidth > 1024) {
-            e.preventDefault();
-            const section = element.getAttribute("data-href");
-            if (section) scrollTo(section, true, "top top");
-          }
+          if (window.innerWidth <= 1024) return;
+          const section = element.getAttribute("data-href");
+          if (!section) return;
+          e.preventDefault();
+          scrollTo(section, true, "top top");
         });
       });
     };
