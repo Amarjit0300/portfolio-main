@@ -4,7 +4,6 @@ import HoverLinks from "./HoverLinks";
 import { gsap } from "gsap";
 import "./styles/Navbar.css";
 import { withBase } from "../utils/withBase";
-import { ResumePdfLink } from "./ResumePdfLink";
 import { createNativeScrollSurface } from "../utils/nativeScrollSurface";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -103,11 +102,6 @@ const Navbar = () => {
             <a data-href="#contact" href="#contact">
               <HoverLinks text="CONTACT" />
             </a>
-          </li>
-          <li>
-            <ResumePdfLink>
-              <HoverLinks text="RESUME" />
-            </ResumePdfLink>
           </li>
         </ul>
       </div>
