@@ -2,44 +2,77 @@ import { useEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HoverLinks from "./HoverLinks";
 import { gsap } from "gsap";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
 import "./styles/Navbar.css";
 import { withBase } from "../utils/withBase";
+import { createNativeScrollSurface } from "../utils/nativeScrollSurface";
 
-gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
+
+export type SmoothScrollApi = ReturnType<typeof createNativeScrollSurface>;
+
 // eslint-disable-next-line react-refresh/only-export-components
-export let smoother: ScrollSmoother;
+export let smoother: SmoothScrollApi = createNativeScrollSurface();
 
 const Navbar = () => {
   useEffect(() => {
-    smoother = ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: 1.7,
-      speed: 1.7,
-      effects: true,
-      autoResize: true,
-      ignoreMobileResize: true,
-    });
-
-    smoother.scrollTop(0);
-    smoother.paused(true);
-
-    const links = document.querySelectorAll(".header ul a");
-    links.forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", (e) => {
-        if (window.innerWidth > 1024) {
-          e.preventDefault();
-          const elem = e.currentTarget as HTMLAnchorElement;
-          const section = elem.getAttribute("data-href");
-          smoother.scrollTo(section, true, "top top");
-        }
+    const setupNavLinks = (
+      scrollTo: (target: string | Element, smooth?: boolean, pos?: string) => void
+    ) => {
+      const links = document.querySelectorAll(".header ul a");
+      links.forEach((elem) => {
+        const element = elem as HTMLAnchorElement;
+        element.addEventListener("click", (e) => {
+          if (window.innerWidth > 1024) {
+            e.preventDefault();
+            const section = element.getAttribute("data-href");
+            if (section) scrollTo(section, true, "top top");
+          }
+        });
       });
+    };
+
+    if (import.meta.env.PROD) {
+      smoother = createNativeScrollSurface();
+      smoother.scrollTop(0);
+      setupNavLinks((target, _s, _p) => smoother.scrollTo(target));
+      window.addEventListener("resize", () => ScrollTrigger.refresh());
+      return;
+    }
+
+    let cancelled = false;
+    let refreshSmoother: (() => void) | undefined;
+
+    import("gsap/ScrollSmoother").then(({ ScrollSmoother }) => {
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollSmoother);
+      smoother = ScrollSmoother.create({
+        wrapper: "#smooth-wrapper",
+        content: "#smooth-content",
+        smooth: 1.7,
+        speed: 1.7,
+        effects: true,
+        autoResize: true,
+        ignoreMobileResize: true,
+      });
+
+      smoother.scrollTop(0);
+      smoother.paused(true);
+
+      setupNavLinks((target, smooth, pos) =>
+        smoother.scrollTo(target, smooth, pos)
+      );
+
+      const onResize = () => {
+        ScrollSmoother.refresh(true);
+      };
+      window.addEventListener("resize", onResize);
+      refreshSmoother = () => window.removeEventListener("resize", onResize);
     });
-    window.addEventListener("resize", () => {
-      ScrollSmoother.refresh(true);
-    });
+
+    return () => {
+      cancelled = true;
+      refreshSmoother?.();
+    };
   }, []);
   return (
     <>
