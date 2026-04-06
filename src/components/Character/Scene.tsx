@@ -28,12 +28,20 @@ const Scene = () => {
       const aspect = container.width / container.height;
       const scene = sceneRef.current;
 
+      // GPU-minimal: disable antialias on low-end devices (< 4 logical cores)
+      const isLowEnd = navigator.hardwareConcurrency < 4;
+
       const renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: true,
+        antialias: !isLowEnd,
+        // Hint GPU driver to use integrated GPU / low-power mode
+        powerPreference: "low-power",
+        // mediump uses half the GPU memory bandwidth vs highp
+        precision: "mediump",
       });
       renderer.setSize(container.width, container.height);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      // Cap pixel ratio at 1.5 — avoids 3× fill-rate cost on Retina/HiDPI screens
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1;
       currentCanvasDiv.appendChild(renderer.domElement);
@@ -86,7 +94,7 @@ const Scene = () => {
       let debounce: number | undefined;
       const onTouchStart = (event: TouchEvent) => {
         const element = event.target as HTMLElement;
-        debounce = setTimeout(() => {
+        debounce = window.setTimeout(() => {
           element?.addEventListener("touchmove", (e: TouchEvent) =>
             handleTouchMove(e, (x, y) => (mouse = { x, y }))
           );

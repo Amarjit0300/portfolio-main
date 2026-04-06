@@ -8,15 +8,17 @@ const setLighting = (scene: THREE.Scene) => {
   directionalLight.intensity = 0;
   directionalLight.position.set(-0.47, -0.32, -1);
   directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.width = 1024;
-  directionalLight.shadow.mapSize.height = 1024;
+  // GPU-minimal: 512×512 uses 4× less GPU memory than 1024×1024
+  directionalLight.shadow.mapSize.width = 512;
+  directionalLight.shadow.mapSize.height = 512;
   directionalLight.shadow.camera.near = 0.5;
   directionalLight.shadow.camera.far = 50;
   scene.add(directionalLight);
 
   const pointLight = new THREE.PointLight(0x22d3ee, 0, 100, 3);
   pointLight.position.set(3, 12, 4);
-  pointLight.castShadow = true;
+  // GPU-minimal: disabled PointLight shadow (requires 6 shadow map faces — most expensive)
+  pointLight.castShadow = false;
   scene.add(pointLight);
 
   new RGBELoader()
