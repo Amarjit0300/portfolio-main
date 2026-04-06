@@ -4,6 +4,7 @@ import HoverLinks from "./HoverLinks";
 import { gsap } from "gsap";
 import "./styles/Navbar.css";
 import { withBase } from "../utils/withBase";
+import { ResumePdfLink } from "./ResumePdfLink";
 import { createNativeScrollSurface } from "../utils/nativeScrollSurface";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,15 +19,14 @@ const Navbar = () => {
     const setupNavLinks = (
       scrollTo: (target: string | Element, smooth?: boolean, pos?: string) => void
     ) => {
-      const links = document.querySelectorAll(".header ul a");
+      const links = document.querySelectorAll(".header ul a[data-href]");
       links.forEach((elem) => {
         const element = elem as HTMLAnchorElement;
         element.addEventListener("click", (e) => {
           if (window.innerWidth <= 1024) return;
-          const section = element.getAttribute("data-href");
-          if (!section) return;
           e.preventDefault();
-          scrollTo(section, true, "top top");
+          const section = element.getAttribute("data-href");
+          if (section) scrollTo(section, true, "top top");
         });
       });
     };
@@ -105,9 +105,9 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href={withBase("/Resume_Amarjit_Singh.pdf")} target="_blank" rel="noopener noreferrer">
+            <ResumePdfLink>
               <HoverLinks text="RESUME" />
-            </a>
+            </ResumePdfLink>
           </li>
         </ul>
       </div>

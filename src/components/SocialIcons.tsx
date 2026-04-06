@@ -6,7 +6,7 @@ import "./styles/SocialIcons.css";
 import { TbNotes } from "react-icons/tb";
 import { useEffect } from "react";
 import HoverLinks from "./HoverLinks";
-import { withBase } from "../utils/withBase";
+import { ResumePdfLink } from "./ResumePdfLink";
 
 const SocialIcons = () => {
   useEffect(() => {
@@ -69,12 +69,12 @@ const SocialIcons = () => {
           </a>
         </span>
       </div>
-      <a className="resume-button" href={withBase("/Resume_Amarjit_Singh.pdf")} target="_blank" rel="noopener noreferrer">
+      <ResumePdfLink className="resume-button">
         <HoverLinks text="RESUME" />
         <span>
           <TbNotes />
         </span>
-      </a>
+      </ResumePdfLink>
     </div>
   );
 };

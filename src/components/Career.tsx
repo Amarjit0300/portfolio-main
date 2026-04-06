@@ -1,7 +1,7 @@
 import HoverLinks from "./HoverLinks";
 import { TbNotes } from "react-icons/tb";
 import "./styles/Career.css";
-import { withBase } from "../utils/withBase";
+import { ResumePdfLink } from "./ResumePdfLink";
 
 const Career = () => {
   return (
@@ -68,15 +68,10 @@ const Career = () => {
             </p>
           </div>
 
-          <a
-            className="career-resume-btn"
-            href={withBase("/Resume_Amarjit_Singh.pdf")}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <ResumePdfLink className="career-resume-btn">
             <HoverLinks text="VIEW FULL RESUME" />
             <TbNotes />
-          </a>
+          </ResumePdfLink>
         </div>
       </div>
     </div>
