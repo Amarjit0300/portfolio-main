@@ -1,3 +1,12 @@
+# Pushes the production build to branch "gh-pages" (only the contents of dist/).
+#
+# One-time setup in the GitHub repo:
+#   Settings → Pages → Build and deployment → Source:
+#   "Deploy from a branch" → Branch: gh-pages → Folder: / (root)
+#
+# If you use "main" and "/" instead, GitHub serves the repo root index.html
+# (with /src/main.tsx) and the portfolio will not run.
+
 name: Deploy to GitHub Pages
 
 on:
@@ -5,16 +14,14 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,16 +31,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+      - name: Publish site to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
