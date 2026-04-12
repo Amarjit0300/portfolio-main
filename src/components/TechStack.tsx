@@ -25,9 +25,9 @@ const imageUrls = [
 ];
 const textures = imageUrls.map((url) => textureLoader.load(url));
 
-const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
 
-const spheres = [...Array(30)].map(() => ({
+const spheres = [...Array(20)].map(() => ({
   scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
 }));
 
@@ -129,25 +129,20 @@ const TechStack = () => {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      const workEl = document.getElementById("work");
-      if (!workEl) return;
-      const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const threshold = workEl.getBoundingClientRect().top;
-      setIsActive(scrollY > threshold);
-    };
-    document.querySelectorAll(".header a[data-href]").forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", () => {
-        const interval = setInterval(() => {
-          handleScroll();
-        }, 10);
-        setTimeout(() => {
-          clearInterval(interval);
-        }, 1000);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const workEl = document.getElementById("work");
+        if (workEl) {
+          const threshold = workEl.getBoundingClientRect().top;
+          setIsActive(threshold < 0);
+        }
+        ticking = false;
       });
-    });
-    window.addEventListener("scroll", handleScroll);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -173,9 +168,10 @@ const TechStack = () => {
 
       <Canvas
         shadows
-        gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+        gl={{ alpha: true, stencil: false, depth: false, antialias: false, powerPreference: "low-power" }}
         camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
         onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
+        frameloop={isActive ? "always" : "never"}
         className="tech-canvas"
       >
         <ambientLight intensity={1} />

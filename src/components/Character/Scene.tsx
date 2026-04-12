@@ -92,28 +92,29 @@ const Scene = () => {
         handleMouseMove(event, (x, y) => (mouse = { x, y }));
       };
       let debounce: number | undefined;
+      const onTouchMove = (e: TouchEvent) =>
+        handleTouchMove(e, (x, y) => (mouse = { x, y }));
+
       const onTouchStart = (event: TouchEvent) => {
         const element = event.target as HTMLElement;
         debounce = window.setTimeout(() => {
-          element?.addEventListener("touchmove", (e: TouchEvent) =>
-            handleTouchMove(e, (x, y) => (mouse = { x, y }))
-          );
+          element?.addEventListener("touchmove", onTouchMove, { passive: true });
         }, 200);
       };
 
-      const onTouchEnd = () => {
+      const onTouchEnd = (event: TouchEvent) => {
+        const element = event.target as HTMLElement;
+        element?.removeEventListener("touchmove", onTouchMove);
         handleTouchEnd((x, y, interpolationX, interpolationY) => {
           mouse = { x, y };
           interpolation = { x: interpolationX, y: interpolationY };
         });
       };
 
-      document.addEventListener("mousemove", (event) => {
-        onMouseMove(event);
-      });
+      document.addEventListener("mousemove", onMouseMove);
       const landingDiv = document.getElementById("landingDiv");
       if (landingDiv) {
-        landingDiv.addEventListener("touchstart", onTouchStart);
+        landingDiv.addEventListener("touchstart", onTouchStart, { passive: true });
         landingDiv.addEventListener("touchend", onTouchEnd);
       }
       const animate = () => {

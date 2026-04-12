@@ -23,7 +23,7 @@ const ImageScene = () => {
     <div className="character-container">
       <div className="character-image-wrapper character-loaded">
         <div className="character-rim"></div>
-        <img src={withBase("/images/character.JPG")} alt="Profile" className="character-img" />
+        <img src={withBase("/images/character.webp")} alt="Profile" className="character-img" />
       </div>
     </div>
   );

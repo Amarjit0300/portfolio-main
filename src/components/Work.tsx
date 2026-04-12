@@ -10,9 +10,9 @@ const projects = [
     category: "Machine Learning",
     tools: "Python, Pandas, NumPy, Scikit-learn",
     images: [
-      withBase("/images/diabetes_prediction.png"),
-      withBase("/images/diabetes_2.png"),
-      withBase("/images/diabetes_3.png"),
+      withBase("/images/diabetes_prediction.webp"),
+      withBase("/images/diabetes_2.webp"),
+      withBase("/images/diabetes_3.webp"),
     ],
   },
   {
@@ -20,9 +20,9 @@ const projects = [
     category: "Full-stack Enterprise Tool",
     tools: "React, Node.js, PostgreSQL, Analytics",
     images: [
-      withBase("/images/task_dashboard.png"),
-      withBase("/images/tasks.png"),
-      withBase("/images/task_login.png"),
+      withBase("/images/task_dashboard.webp"),
+      withBase("/images/tasks.webp"),
+      withBase("/images/task_login.webp"),
     ],
   },
   {
@@ -30,9 +30,9 @@ const projects = [
     category: "AI Image Colorization",
     tools: "Python, TensorFlow, React, FastAPI",
     images: [
-      withBase("/images/recolorizer.png"),
-      withBase("/images/recolorizer_login.png"),
-      withBase("/images/recolorizer_landing.png"),
+      withBase("/images/recolorizer.webp"),
+      withBase("/images/recolorizer_login.webp"),
+      withBase("/images/recolorizer_landing.webp"),
     ],
   },
 ];

@@ -77,7 +77,7 @@ const Navbar = () => {
     <>
       <div className="header">
         <a href={import.meta.env.BASE_URL} className="navbar-title" data-cursor="disable" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img src={withBase("/images/character.JPG")} alt="Profile" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+          <img src={withBase("/images/character.webp")} alt="Profile" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
           AS
         </a>
         <a
