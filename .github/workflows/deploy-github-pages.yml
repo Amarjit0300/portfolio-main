@@ -1,0 +1,53 @@
+# Copies the Vite production build into docs/ and pushes to main.
+# GitHub Pages must use: Branch "main", folder "/docs" (NOT "/" — that serves dev index.html).
+#
+# Pushes that only change docs/ are ignored (paths-ignore) so the bot push does not loop.
+
+name: Deploy site to docs
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-docs
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Sync dist → docs
+        run: |
+          rm -rf docs
+          mkdir -p docs
+          cp -r dist/. docs/
+
+      - name: Commit and push docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --staged --quiet; then
+            echo "No changes under docs/"
+            exit 0
+          fi
+          git commit -m "chore(pages): sync Vite build to docs/"
+          git push

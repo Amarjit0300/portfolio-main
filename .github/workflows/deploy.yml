@@ -1,0 +1,66 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node (with npm cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Cache Vite's build output between runs for faster incremental builds
+      - name: Cache Vite build cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.vite
+          key: vite-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('src/**') }}
+          restore-keys: |
+            vite-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-
+            vite-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Run TypeScript type-check and Vite production build concurrently
+      # This saturates all available CPU cores (esbuild uses native threads)
+      - name: Type-check & Build (parallel)
+        env:
+          # Give Node.js 4 GB heap — esbuild's native Go binary uses all OS cores
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: |
+          npx tsc --noEmit &
+          TSC_PID=$!
+          npm run build -- --mode production
+          wait $TSC_PID
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

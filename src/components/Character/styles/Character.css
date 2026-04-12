@@ -1,0 +1,84 @@
+.character-image-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 90%;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.character-img {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 1.5s ease, transform 1.5s ease;
+}
+
+/* Entrance animation when loaded */
+.character-loaded .character-img {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Subtle floating animation after entrance */
+@keyframes characterFloat {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.character-loaded .character-img {
+  animation: characterFloat 5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* Glow effect behind character */
+.character-loaded .character-rim {
+  animation: backlight 3s forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes backlight {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 100%) scale(0.5);
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: translate(-50%, 50%) scale(1.4);
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px) {
+  .character-image-wrapper {
+    height: 75%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .character-image-wrapper {
+    height: 65%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .character-image-wrapper {
+    height: 55%;
+  }
+}
